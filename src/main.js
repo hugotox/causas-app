@@ -87,7 +87,7 @@ class Main extends Component {
     }
     return (
       <View style={this.styles.container}>
-        <Spinner visible={this.props.loggingIn || !this.props.playerId}
+        <Spinner visible={this.props.loggingIn}
                  textContent={"Conectando..."}
                  textStyle={{color: '#FFF'}} />
         <Animatable.View style={this.styles.dashboard}

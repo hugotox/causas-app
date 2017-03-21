@@ -35,8 +35,8 @@ export default class Login extends Component {
           <Text>{this.props.loginError}</Text>
         :null}
         <Text style={styles.disclaimer}>
-          La clave única es necesaria para permitir el acceso al sitio del poder judicial. Por razones
-          de seguridad esta clave no se guarda en la memoria del teléfono.
+          La clave única es necesaria para permitir el acceso al sitio del poder
+          judicial. Ésta clave no se guarda en la memoria del teléfono.
         </Text>
       </View>
     );
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     fontSize: 30
   },
   input: {
-    width: 300
+    width: 300,
   },
   disclaimer: {
     fontSize: 10,
