@@ -82,23 +82,6 @@ class Main extends Component {
         }
     }
 
-    // const data = JSON.stringify(this.props, null, 2)
-    //
-    // return (
-    //   <View>
-    //     <Text>{ data }</Text>
-    //   </View>
-    // )
-
-    // <Login
-    //   rut={this.props.rut}
-    //   clave={this.props.clave}
-    //   playerId={this.props.playerId}
-    //   triggerLogin={this.props.triggerLogin}
-    //   changeField={this.props.changeField}
-    //   loginError={this.props.loginError}
-    // />
-
     return (
       <View style={styles.container}>
         { content }

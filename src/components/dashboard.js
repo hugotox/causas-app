@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import {
   View,
   Text,
@@ -8,8 +9,9 @@ import {
 
 import StyledText from './styled-text.js'
 
-export default class Dashboard extends Component {
+class Dashboard extends Component {
   render() {
+    console.log(this.props);
     return (
       <View style={styles.container}>
         <StyledText>Últimos documentos recibidos</StyledText>
@@ -24,3 +26,5 @@ const styles = StyleSheet.create({
     marginTop: Platform.OS === 'ios' ? 20 : 0,
   }
 });
+
+export default connect()(Dashboard)
