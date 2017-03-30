@@ -8,9 +8,11 @@ import {
   View,
   Text,
   Dimensions,
+  Image,
   StyleSheet,
 } from 'react-native';
 
+import Intro from './components/intro';
 import Login from './components/login';
 import Dashboard from './components/dashboard';
 import * as actions from './actions/sync';
@@ -21,30 +23,6 @@ class Main extends Component {
   constructor(props) {
     super(props);
     this.onIds = this.onIds.bind(this);
-    this.styles = this.createStyles();
-  }
-
-  createStyles() {
-    const {height, width} = Dimensions.get('window');
-    return StyleSheet.create({
-      container: {
-        flex: 1
-      },
-      login: {
-        width: width,
-        height: height,
-        top: this.props.pushNoticationSetup ? -height : 0,
-        opacity: this.props.pushNoticationSetup ? 0 : 1,
-        position: 'absolute',
-      },
-      dashboard: {
-        width: width,
-        height: height,
-        top: this.props.pushNoticationSetup ? 0 : 50,
-        position: 'absolute',
-        opacity: this.props.pushNoticationSetup ? 1 : 0
-      }
-    });
   }
 
   componentWillMount() {
@@ -82,35 +60,59 @@ class Main extends Component {
   }
 
   render() {
-    if (this.props.pushNoticationSetup) {
-      this.styles = this.createStyles();
-    }
-    return (
-      <View style={this.styles.container}>
-        <Spinner visible={this.props.loggingIn}
-                 textContent={"Conectando..."}
-                 textStyle={{color: '#FFF'}} />
-        <Animatable.View style={this.styles.dashboard}
-          transition={['opacity', 'top']}
-          easing="ease-out"
-          duration={500}
-        >
-          <Dashboard/>
-        </Animatable.View>
-        <View style={this.styles.login}>
-          <Login
-            rut={this.props.rut}
-            clave={this.props.clave}
-            playerId={this.props.playerId}
-            triggerLogin={this.props.triggerLogin}
-            changeField={this.props.changeField}
-            loginError={this.props.loginError}
+    let content = null
+    // wait for storage and playerId
+    if(!this.props.rehydrated || !this.props.playerId) {
+      const {height, width} = Dimensions.get('window');
+      content = (
+        <View style={styles.container}>
+          <Image style={{position: 'absolute', top: 0, left: 0, flex: 1, width, height}}
+            source={require('./assets/portada-ojv-sm.jpg')}
+            resizeMode={Image.resizeMode.stretch}
           />
+          <Spinner visible={ true } textContent={"Cargando..."} textStyle={{color: '#fff'}} />
         </View>
+      );
+    } else {
+        // pushNoticationSetup is true only after login is successful
+        if (!this.props.pushNoticationSetup) {
+          content = <Intro/>
+        } else {
+          content = <Dashboard/>
+        }
+    }
+
+    // const data = JSON.stringify(this.props, null, 2)
+    //
+    // return (
+    //   <View>
+    //     <Text>{ data }</Text>
+    //   </View>
+    // )
+
+    // <Login
+    //   rut={this.props.rut}
+    //   clave={this.props.clave}
+    //   playerId={this.props.playerId}
+    //   triggerLogin={this.props.triggerLogin}
+    //   changeField={this.props.changeField}
+    //   loginError={this.props.loginError}
+    // />
+
+    return (
+      <View style={styles.container}>
+        { content }
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white'
+  },
+})
 
 const mapStateToProps = (state) => {
   return {
@@ -118,7 +120,7 @@ const mapStateToProps = (state) => {
     playerId: state.playerId,
     rut: state.rut,
     clave: state.clave,
-    loggingIn: state.loggingIn,
+    logingIn: state.logingIn,
     loginError: state.loginError,
   };
 };

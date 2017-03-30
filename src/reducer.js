@@ -3,7 +3,7 @@ import ActionTypes from './actions/types';
 const initialState = {
   pushNoticationSetup: false,
   playerId: null,
-  loggingIn: false,
+  logingIn: false,
   rut: '',
   clave: '',
   loginError: '',
@@ -27,14 +27,14 @@ export default reducer = (state=initialState, action) => {
 
     case (ActionTypes.LOGIN_STARTED): {
       return Object.assign({}, state, {
-        loggingIn: true,
+        logingIn: true,
         loginError: ''
       })
     }
 
     case (ActionTypes.LOGIN_SUCCESS): {
       return Object.assign({}, state, {
-        loggingIn: false,
+        logingIn: false,
         pushNoticationSetup: true,
         loginError: ''
       })
@@ -42,7 +42,7 @@ export default reducer = (state=initialState, action) => {
 
     case (ActionTypes.LOGIN_ERROR): {
       return Object.assign({}, state, {
-        loggingIn: false,
+        logingIn: false,
         loginError: action.message
       });
     }

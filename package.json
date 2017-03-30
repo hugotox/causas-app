@@ -12,7 +12,9 @@
     "react-native": "0.41.2",
     "react-native-animatable": "^1.1.0",
     "react-native-loading-spinner-overlay": "^0.4.1",
+    "react-native-material-design": "^0.3.7",
     "react-native-onesignal": "^3.0.3",
+    "react-native-swiper": "^1.5.4",
     "react-redux": "^5.0.2",
     "redux": "^3.6.0",
     "redux-persist": "^4.4.0",
@@ -26,5 +28,10 @@
   },
   "jest": {
     "preset": "react-native"
+  },
+  "rnpm": {
+    "assets": [
+      "./src/assets/fonts"
+    ]
   }
 }

@@ -25,12 +25,7 @@ export default class Index extends Component {
   render() {
     return (
       <Provider store={store}>
-        {this.state.rehydrated ?
-          <Main/>
-        :
-        <Spinner visible={this.props.loggingIn} textContent={"Cargando..."}
-          textStyle={{color: '#FFF'}} />
-        }
+        <Main rehydrated={ this.state.rehydrated }/>
       </Provider>
     );
   }
