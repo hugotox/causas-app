@@ -5,27 +5,102 @@ import {
   Text,
   StyleSheet,
   Platform,
+  ListView,
+  RefreshControl,
+  Dimensions,
+  TouchableOpacity,
 } from 'react-native';
-
+import Icon from 'react-native-vector-icons/FontAwesome';
+import LeftMenu from './left-menu.js'
 import * as actions from '../actions/sync.js'
 import StyledText from './styled-text.js'
 
+
+const { height, width } = Dimensions.get('window');
+
+const DOCUMENT_TYPES = {
+  1: 'Corte Suprema',
+  2: 'Corte de Apelaciones',
+  3: 'Civil',
+  4: 'Laboral',
+  5: 'Penal',
+  6: 'Cobranza',
+  7: 'Familia'
+}
+
 class Dashboard extends Component {
 
+  constructor() {
+    super()
+    this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    this.state = {
+      refreshing: false,
+      dataSource: null,
+      page: 1,
+    }
+  }
+
+  fetchData() {
+    return this.props.dispatch(actions.triggerfetchNotifications(this.props.rut, this.state.page))
+  }
+
+  _onRefresh() {
+    this.setState({refreshing: true});
+    this.fetchData().then(() => {
+      this.setState({refreshing: false});
+    });
+  }
+
   componentDidMount() {
-    this.props.dispatch(actions.triggerfetchNotifications(this.props.rut))
+    this.fetchData()
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.notifications) {
+      this.setState({dataSource: this.ds.cloneWithRows(nextProps.notifications)})
+    }
+  }
+
+  renderNotification(notification) {
+    return (
+      <View style={styles.notification}>
+        <StyledText>{DOCUMENT_TYPES[notification.document_type]}: {notification.heading} - {notification.contents}</StyledText>
+      </View>
+    )
+  }
+
+  showMenu() {
+
   }
 
   render() {
+    if(this.props.fetchNotifications) {
+      return (
+        <View style={styles.container}>
+          <StyledText>Cargando datos...</StyledText>
+        </View>
+      )
+    }
     return (
       <View style={styles.container}>
-        { this.props.fetchNotifications && <StyledText>Cargando datos...</StyledText> }
-        <StyledText>Últimos documentos recibidos</StyledText>
-        { this.props.notifications && this.props.notifications.map(notification => {
-          return (
-            <StyledText key={notification.id}>{notification.heading}</StyledText>
-          )
-        })}
+        <View style={styles.heading}>
+          <TouchableOpacity onPress={this.showMenu.bind(this)}>
+            <Icon name="bars" size={20} color="#fff" style={styles.menuIcon}/>
+          </TouchableOpacity>
+          <StyledText style={styles.headingText}>Últimos documentos recibidos</StyledText>
+        </View>
+        { this.state.dataSource &&
+          <ListView
+            dataSource={this.state.dataSource}
+            renderRow={this.renderNotification.bind(this)}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this._onRefresh.bind(this)}
+              />
+            }
+          />
+        }
       </View>
     );
   }
@@ -35,6 +110,36 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: Platform.OS === 'ios' ? 20 : 0,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+  },
+  heading: {
+    alignSelf: "stretch",
+    paddingTop: 20,
+    paddingRight: 20,
+    paddingLeft: 20,
+    paddingBottom: 20,
+    backgroundColor: '#1a396bdd',
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  headingText:{
+    fontSize: 20,
+    color: '#fff'
+  },
+  menuIcon: {
+    marginRight: 20,
+  },
+  notification: {
+    paddingTop: 8,
+    paddingRight: 20,
+    paddingLeft: 20,
+    paddingBottom: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  leftMenu: {
+    backgroundColor: 'white',
   }
 });
 

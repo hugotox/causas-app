@@ -38,7 +38,7 @@ export const loginError = (message) => {
 export const triggerLogin = (rut, clave, playerId) => {
   return dispatch => {
     dispatch(loginStarted());
-    async.loginAsync(rut, clave, playerId)
+    return async.loginAsync(rut, clave, playerId)
       .then(response => {
         if(response.status === 200) {
           if(response.data.success === true) {
@@ -51,12 +51,12 @@ export const triggerLogin = (rut, clave, playerId) => {
   };
 };
 
-export const triggerfetchNotifications = rut => {
+export const triggerfetchNotifications = (rut, page) => {
   return dispatch => {
     dispatch({
       type: ActionTypes.FETCH_NOTIF_STARTED
     })
-    async.fetchNotifications(rut)
+    return async.fetchNotifications(rut, page)
       .then(resp => {
         dispatch({
           type: ActionTypes.FETCH_NOTIF_DONE,
