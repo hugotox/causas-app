@@ -61,9 +61,10 @@ const styles = StyleSheet.create({
   }
 })
 
+const {height, width} = Dimensions.get('window');
+
 export default class Intro1 extends Component {
   render() {
-    const {height, width} = Dimensions.get('window');
     const buttonWidth = width - 50;
     return (
       <View style={styles.container}>

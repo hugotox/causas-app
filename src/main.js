@@ -10,6 +10,7 @@ import {
   Dimensions,
   Image,
   StyleSheet,
+  Platform,
 } from 'react-native';
 
 import Intro from './components/intro';
@@ -60,6 +61,15 @@ class Main extends Component {
   }
 
   render() {
+    // IOS testing
+    // if(Platform.OS === 'ios') {
+    //   return (
+    //     <View style={styles.container}>
+    //       <Intro/>
+    //     </View>
+    //   );
+    // }
+
     let content = null
     // wait for storage and playerId
     if(!this.props.rehydrated || !this.props.playerId) {
@@ -67,7 +77,7 @@ class Main extends Component {
       content = (
         <View style={styles.container}>
           <Image style={{position: 'absolute', top: 0, left: 0, flex: 1, width, height}}
-            source={require('./assets/portada-ojv-sm.jpg')}
+            source={require('./assets/justice.png')}
             resizeMode={Image.resizeMode.stretch}
           />
           <Spinner visible={ true } textContent={"Cargando..."} textStyle={{color: '#fff'}} />

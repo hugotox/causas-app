@@ -7,6 +7,7 @@ const initialState = {
   rut: '',
   clave: '',
   loginError: '',
+  fetchNotifications: false
 };
 
 export default reducer = (state=initialState, action) => {
@@ -45,6 +46,18 @@ export default reducer = (state=initialState, action) => {
         logingIn: false,
         loginError: action.message
       });
+    }
+
+    case ActionTypes.FETCH_NOTIF_STARTED: {
+      return Object.assign({}, state, { fetchingNotifications: true })
+    }
+
+    case ActionTypes.FETCH_NOTIF_DONE: {
+      const notifications = action.notifications
+      return Object.assign({}, state, {
+        fetchingNotifications: true ,
+        notifications
+      })
     }
 
     default:

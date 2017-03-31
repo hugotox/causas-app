@@ -50,3 +50,18 @@ export const triggerLogin = (rut, clave, playerId) => {
       });
   };
 };
+
+export const triggerfetchNotifications = rut => {
+  return dispatch => {
+    dispatch({
+      type: ActionTypes.FETCH_NOTIF_STARTED
+    })
+    async.fetchNotifications(rut)
+      .then(resp => {
+        dispatch({
+          type: ActionTypes.FETCH_NOTIF_DONE,
+          notifications: resp.data.data
+        })
+      })
+  }
+}

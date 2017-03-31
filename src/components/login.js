@@ -20,6 +20,10 @@ class Login extends Component {
     this.props.triggerLogin(this.props.rut, this.props.clave, this.props.playerId);
   }
 
+  focusNextField(nextField) {
+    this.refs[nextField].focus();
+  }
+
   render() {
     const {height, width} = Dimensions.get('window');
     const disableButton = this.props.rut === '' || this.props.clave === '';
@@ -27,18 +31,23 @@ class Login extends Component {
     return (
       <View style={styles.container}>
         <Image style={[styles.backImage, {width, height}]}
-          source={require('../assets/portada-ojv-sm.jpg')}
+          source={require('../assets/justice.png')}
           resizeMode={Image.resizeMode.stretch}/>
         <Text style={styles.heading}>CAUSAS</Text>
         <Text style={styles.text}>Por favor ingresa tu RUT y clave única para comenzar.</Text>
         <TextInput placeholder='RUT'
+          ref="1"
           style={[styles.input, {width: buttonWidth}]}
           value={this.props.rut}
+          returnKeyType='next'
+          blurOnSubmit={false}
+          onSubmitEditing={() => this.focusNextField('2')}
           onChangeText={text => this.props.changeField('rut', text)}
           underlineColorAndroid="transparent"
           placeholderTextColor={Variables.placeholderTextColor}
         />
         <TextInput placeholder='Clave única'
+          ref="2"
           secureTextEntry={true}
           style={[styles.input, {width: buttonWidth}]}
           value={this.props.clave}
