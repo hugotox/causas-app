@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: 'white',
+    backgroundColor: '#00000000',
   },
   text: {
     color: 'white',
@@ -69,7 +70,7 @@ export default class Intro1 extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.headingContainer}>
-          <Heading style={styles.title}>Mis Causas</Heading>
+          <Heading style={styles.title}>MIS CAUSAS</Heading>
         </View>
         <View style={styles.centerContainer}>
           <StyledText style={styles.text}>

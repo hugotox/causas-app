@@ -60,16 +60,14 @@ class Main extends Component {
     this.props.savePlayerID(device.userId);
   }
 
-  render() {
-    // IOS testing
+  componentDidMount() {
+    // IOS Testing
     // if(Platform.OS === 'ios') {
-    //   return (
-    //     <View style={styles.container}>
-    //       <Intro/>
-    //     </View>
-    //   );
+    //   this.props.savePlayerID('9f3f6e3d-fd1f-4541-8511-d331ee77d488')
     // }
+  }
 
+  render() {
     let content = null
     // wait for storage and playerId
     if(!this.props.rehydrated || !this.props.playerId) {

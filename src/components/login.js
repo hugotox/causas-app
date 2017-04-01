@@ -33,7 +33,7 @@ class Login extends Component {
         <Image style={[styles.backImage, {width, height}]}
           source={require('../assets/justice.png')}
           resizeMode={Image.resizeMode.stretch}/>
-        <Text style={styles.heading}>CAUSAS</Text>
+        <Text style={styles.heading}>MIS CAUSAS</Text>
         <Text style={styles.text}>Por favor ingresa tu RUT y clave única para comenzar.</Text>
         <TextInput placeholder='RUT'
           ref="1"

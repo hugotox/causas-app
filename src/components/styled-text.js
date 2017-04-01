@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: Variables.textFont,
     fontSize: Variables.fontSize,
+    color: Variables.textColor
   }
 })
 
