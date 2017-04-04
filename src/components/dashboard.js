@@ -14,19 +14,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import LeftMenu from './left-menu.js'
 import * as actions from '../actions/sync.js'
 import StyledText from './styled-text.js'
+import Notification from './notification.js'
 
-
-const { height, width } = Dimensions.get('window');
-
-const DOCUMENT_TYPES = {
-  1: 'Corte Suprema',
-  2: 'Corte de Apelaciones',
-  3: 'Civil',
-  4: 'Laboral',
-  5: 'Penal',
-  6: 'Cobranza',
-  7: 'Familia'
-}
 
 class Dashboard extends Component {
 
@@ -41,7 +30,9 @@ class Dashboard extends Component {
   }
 
   fetchData() {
-    return this.props.dispatch(actions.triggerfetchNotifications(this.props.rut, this.state.page))
+    return this.props.dispatch(
+      actions.triggerfetchNotifications(this.props.rut, this.props.clave, this.state.page)
+    )
   }
 
   _onRefresh() {
@@ -63,9 +54,7 @@ class Dashboard extends Component {
 
   renderNotification(notification) {
     return (
-      <View style={styles.notification}>
-        <StyledText>{DOCUMENT_TYPES[notification.document_type]}: {notification.heading} - {notification.contents}</StyledText>
-      </View>
+      <Notification notification={notification}/>
     )
   }
 
@@ -91,6 +80,7 @@ class Dashboard extends Component {
         </View>
         { this.state.dataSource &&
           <ListView
+            style={styles.listView}
             dataSource={this.state.dataSource}
             renderRow={this.renderNotification.bind(this)}
             refreshControl={
@@ -110,7 +100,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: Platform.OS === 'ios' ? 20 : 0,
-    justifyContent: 'center',
     alignItems: 'flex-start',
   },
   heading: {
@@ -130,22 +119,18 @@ const styles = StyleSheet.create({
   menuIcon: {
     marginRight: 20,
   },
-  notification: {
-    paddingTop: 8,
-    paddingRight: 20,
-    paddingLeft: 20,
-    paddingBottom: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-  },
   leftMenu: {
     backgroundColor: 'white',
+  },
+  listView: {
+    alignSelf: "stretch"
   }
 });
 
 const mapStateToProps = state => {
   return {
     rut: state.rut,
+    clave: state.clave,
     notifications: state.notifications,
     fetchNotifications: state.fetchNotifications
   }

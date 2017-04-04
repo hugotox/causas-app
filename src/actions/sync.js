@@ -51,17 +51,19 @@ export const triggerLogin = (rut, clave, playerId) => {
   };
 };
 
-export const triggerfetchNotifications = (rut, page) => {
+export const triggerfetchNotifications = (rut, clave, page) => {
   return dispatch => {
     dispatch({
       type: ActionTypes.FETCH_NOTIF_STARTED
     })
-    return async.fetchNotifications(rut, page)
+    return async.fetchNotifications(rut, clave, page)
       .then(resp => {
         dispatch({
           type: ActionTypes.FETCH_NOTIF_DONE,
           notifications: resp.data.data
         })
+      }, err => {
+        console.log(err);
       })
   }
 }
