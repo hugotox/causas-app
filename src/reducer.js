@@ -7,8 +7,25 @@ const initialState = {
   rut: '',
   clave: '',
   loginError: '',
-  fetchNotifications: false
+  fetchNotifications: false,
+  notifications: [],
+  searchTerm: '',
+  filteredNotifications: []
 };
+
+const filterNotifications = (notifications, searchTerm) => {
+  searchTerm = searchTerm.toLowerCase()
+  return notifications.filter(notif => {
+    if(searchTerm === '') {
+      return true
+    } else {
+      return (
+        notif.heading.toLowerCase().indexOf(searchTerm) !== -1 ||
+        notif.contents.toLowerCase().indexOf(searchTerm) !== -1
+      )
+    }
+  })
+}
 
 export default reducer = (state=initialState, action) => {
 
@@ -54,9 +71,19 @@ export default reducer = (state=initialState, action) => {
 
     case ActionTypes.FETCH_NOTIF_DONE: {
       const notifications = action.notifications
+      const filteredNotifications = filterNotifications(action.notifications, state.searchTerm)
       return Object.assign({}, state, {
         fetchingNotifications: true ,
-        notifications
+        notifications,
+        filteredNotifications
+      })
+    }
+
+    case ActionTypes.FILTER_NOTIFICATIONS: {
+      const filteredNotifications = filterNotifications(state.notifications, action.searchTerm)
+      return Object.assign({}, state, {
+        searchTerm: action.searchTerm,
+        filteredNotifications
       })
     }
 

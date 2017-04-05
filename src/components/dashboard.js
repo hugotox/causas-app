@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import {
   View,
   Text,
+  TextInput,
   StyleSheet,
   Platform,
   ListView,
@@ -11,6 +12,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import * as Animatable from 'react-native-animatable'
 import LeftMenu from './left-menu.js'
 import * as actions from '../actions/sync.js'
 import StyledText from './styled-text.js'
@@ -26,6 +28,7 @@ class Dashboard extends Component {
       refreshing: false,
       dataSource: null,
       page: 1,
+      searchVisible: false
     }
   }
 
@@ -58,8 +61,18 @@ class Dashboard extends Component {
     )
   }
 
-  showMenu() {
+  toggleSearch() {
+    if(!this.state.searchVisible) {
+      this.refs['1'].focus()
+    } else {
+      this.refs['1'].blur()
+      this.props.dispatch(actions.filterNotifications(''))
+    }
+    this.setState({searchVisible: !this.state.searchVisible})
+  }
 
+  changeSearchTerm(value) {
+    this.props.dispatch(actions.filterNotifications(value))
   }
 
   render() {
@@ -72,17 +85,49 @@ class Dashboard extends Component {
     }
     return (
       <View style={styles.container}>
+
         <View style={styles.heading}>
-          <TouchableOpacity onPress={this.showMenu.bind(this)}>
+          {/*<TouchableOpacity onPress={this.showMenu.bind(this)}>
             <Icon name="bars" size={20} color="#fff" style={styles.menuIcon}/>
-          </TouchableOpacity>
-          <StyledText style={styles.headingText}>Últimos documentos recibidos</StyledText>
+          </TouchableOpacity>*/}
+          <View style={{position: 'relative'}}>
+            <Animatable.View transition={['opacity']}
+              style={[styles.headingTextContainer, { opacity: this.state.searchVisible ? 0 : 1 }]}>
+              <StyledText style={styles.headingText}>Últimos documentos recibidos</StyledText>
+            </Animatable.View>
+            <Animatable.View transition={['opacity']}
+              style={[styles.searchContainer, { opacity: this.state.searchVisible ? 1 : 0 }]}>
+              <TextInput placeholder=''
+                ref="1"
+                style={[styles.searchInput]}
+                value={this.props.searchTerm}
+                blurOnSubmit={false}
+                onChangeText={this.changeSearchTerm.bind(this)}
+                underlineColorAndroid="transparent"
+                placeholderTextColor={Variables.placeholderTextColor}
+              />
+            </Animatable.View>
+          </View>
+          <View style={styles.searchIconContainer}>
+            <TouchableOpacity style={{padding: 15}} ref='search'
+              onPress={this.toggleSearch.bind(this)}>
+              <Icon name={this.state.searchVisible ? 'close' : "search"} size={20} color="#fff" style={styles.menuIcon}/>
+            </TouchableOpacity>
+          </View>
         </View>
+
+        {this.props.notifications.length === 0 && this.props.searchTerm === '' &&
+          <View>
+            <StyledText>Las notificaciones aparecerán en esta sección una vez que nuestro sistema identifique nuevos documentos en tus causas.</StyledText>
+          </View>
+        }
+
         { this.state.dataSource &&
           <ListView
             style={styles.listView}
             dataSource={this.state.dataSource}
             renderRow={this.renderNotification.bind(this)}
+            enableEmptySections={true}
             refreshControl={
               <RefreshControl
                 refreshing={this.state.refreshing}
@@ -91,10 +136,13 @@ class Dashboard extends Component {
             }
           />
         }
+
       </View>
     );
   }
 }
+
+const {height, width} = Dimensions.get('window')
 
 const styles = StyleSheet.create({
   container: {
@@ -104,26 +152,48 @@ const styles = StyleSheet.create({
   },
   heading: {
     alignSelf: "stretch",
-    paddingTop: 20,
+    paddingTop: 5,
     paddingRight: 20,
     paddingLeft: 20,
-    paddingBottom: 20,
+    paddingBottom: 5,
     backgroundColor: '#1a396bdd',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  headingTextContainer: {
+    position: 'absolute',
+    top: -15,
+    left: 0,
+    width: width - 70,
+    height: 30
+  },
+  searchContainer: {
+    position: 'absolute',
+    top: -25,
+    left: 0,
+    width: width - 70,
+    height: 50,
+  },
+  searchInput: {
+    color: 'white',
+    fontSize: 20
   },
   headingText:{
     fontSize: 20,
     color: '#fff'
   },
   menuIcon: {
-    marginRight: 20,
+
   },
   leftMenu: {
     backgroundColor: 'white',
   },
   listView: {
     alignSelf: "stretch"
+  },
+  searchIconContainer: {
+    flexDirection: 'row',
   }
 });
 
@@ -131,8 +201,9 @@ const mapStateToProps = state => {
   return {
     rut: state.rut,
     clave: state.clave,
-    notifications: state.notifications,
-    fetchNotifications: state.fetchNotifications
+    notifications: state.filteredNotifications,
+    fetchNotifications: state.fetchNotifications,
+    searchTerm: state.searchTerm
   }
 }
 

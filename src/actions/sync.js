@@ -67,3 +67,10 @@ export const triggerfetchNotifications = (rut, clave, page) => {
       })
   }
 }
+
+export const filterNotifications = searchTerm => {
+  return {
+    type: ActionTypes.FILTER_NOTIFICATIONS,
+    searchTerm
+  }
+}
