@@ -99,6 +99,16 @@ android {
         manifestPlaceholders = [onesignal_app_id: "d5dd0050-2ef6-4989-8ce7-2dedf40121c0",
                                 onesignal_google_project_number: "REMOTE"]
     }
+    signingConfigs {
+        release {
+            if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
+                storeFile file(MYAPP_RELEASE_STORE_FILE)
+                storePassword MYAPP_RELEASE_STORE_PASSWORD
+                keyAlias MYAPP_RELEASE_KEY_ALIAS
+                keyPassword MYAPP_RELEASE_KEY_PASSWORD
+            }
+        }
+    }
     splits {
         abi {
             reset()
