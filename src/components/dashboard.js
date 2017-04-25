@@ -2,13 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
   View,
-  Text,
   TextInput,
-  StyleSheet,
-  Platform,
   ListView,
   RefreshControl,
-  Dimensions,
   TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -17,18 +13,21 @@ import LeftMenu from './left-menu.js'
 import * as actions from '../actions/sync.js'
 import StyledText from './styled-text.js'
 import Notification from './notification.js'
-
+import styles from './dashboard-style'
+import Variables from '../styles/variables'
 
 class Dashboard extends Component {
 
   constructor() {
     super()
     this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    this.initialFetchInterval = ''
     this.state = {
       refreshing: false,
       dataSource: null,
       page: 1,
-      searchVisible: false
+      searchVisible: false,
+      menuOpen: false,
     }
   }
 
@@ -47,11 +46,16 @@ class Dashboard extends Component {
 
   componentDidMount() {
     this.fetchData()
+    this.initialFetchInterval = setInterval(() => {
+      console.log('fetching...')
+      this.fetchData()
+    }, 60 * 60 * 1000)  // fetch every one hour
   }
 
   componentWillReceiveProps(nextProps) {
     if(nextProps.notifications) {
       this.setState({dataSource: this.ds.cloneWithRows(nextProps.notifications)})
+      clearInterval(this.initialFetchInterval)
     }
   }
 
@@ -75,6 +79,11 @@ class Dashboard extends Component {
     this.props.dispatch(actions.filterNotifications(value))
   }
 
+  toggleMenu() {
+    const menuOpen = !this.state.menuOpen
+    this.setState({menuOpen})
+  }
+
   render() {
     if(this.props.fetchNotifications) {
       return (
@@ -85,12 +94,13 @@ class Dashboard extends Component {
     }
     return (
       <View style={styles.container}>
-
         <View style={styles.heading}>
-          {/*<TouchableOpacity onPress={this.showMenu.bind(this)}>
-            <Icon name="bars" size={20} color="#fff" style={styles.menuIcon}/>
-          </TouchableOpacity>*/}
-          <View style={{position: 'relative'}}>
+          <View style={styles.menuIcon}>
+            <TouchableOpacity onPress={this.toggleMenu.bind(this)}>
+              <Icon name="bars" size={20} color="#fff"/>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.menuTextContainer}>
             <Animatable.View transition={['opacity']}
               style={[styles.headingTextContainer, { opacity: this.state.searchVisible ? 0 : 1 }]}>
               <StyledText style={styles.headingText}>Últimos documentos recibidos</StyledText>
@@ -111,14 +121,16 @@ class Dashboard extends Component {
           <View style={styles.searchIconContainer}>
             <TouchableOpacity style={{padding: 15}} ref='search'
               onPress={this.toggleSearch.bind(this)}>
-              <Icon name={this.state.searchVisible ? 'close' : "search"} size={20} color="#fff" style={styles.menuIcon}/>
+              <Icon name={this.state.searchVisible ? 'close' : "search"} size={20} color="#fff"/>
             </TouchableOpacity>
           </View>
         </View>
 
         {this.props.notifications.length === 0 && this.props.searchTerm === '' &&
           <View>
-            <StyledText>Las notificaciones aparecerán en esta sección una vez que nuestro sistema identifique nuevos documentos en tus causas.</StyledText>
+            <StyledText style={styles.emptyDashMessage}>
+              Las notificaciones aparecerán en esta sección una vez que nuestro sistema identifique nuevos documentos en tus causas.
+            </StyledText>
           </View>
         }
 
@@ -137,65 +149,19 @@ class Dashboard extends Component {
           />
         }
 
+        <Animatable.View
+          style={[styles.leftMenu, this.state.menuOpen ? styles.leftMenuOpen : null]}
+          transition={['left']}
+          easing="ease-in-out"
+          duration={200}
+        >
+          <LeftMenu onRequestHide={ this.toggleMenu.bind(this) } />
+        </Animatable.View>
+
       </View>
     );
   }
 }
-
-const {height, width} = Dimensions.get('window')
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: Platform.OS === 'ios' ? 20 : 0,
-    alignItems: 'flex-start',
-  },
-  heading: {
-    alignSelf: "stretch",
-    paddingTop: 5,
-    paddingRight: 20,
-    paddingLeft: 20,
-    paddingBottom: 5,
-    backgroundColor: '#1a396bdd',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  headingTextContainer: {
-    position: 'absolute',
-    top: -15,
-    left: 0,
-    width: width - 70,
-    height: 30
-  },
-  searchContainer: {
-    position: 'absolute',
-    top: -25,
-    left: 0,
-    width: width - 70,
-    height: 50,
-  },
-  searchInput: {
-    color: 'white',
-    fontSize: 20
-  },
-  headingText:{
-    fontSize: 20,
-    color: '#fff'
-  },
-  menuIcon: {
-
-  },
-  leftMenu: {
-    backgroundColor: 'white',
-  },
-  listView: {
-    alignSelf: "stretch"
-  },
-  searchIconContainer: {
-    flexDirection: 'row',
-  }
-});
 
 const mapStateToProps = state => {
   return {

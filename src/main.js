@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import OneSignal from 'react-native-onesignal';
-import * as Animatable from 'react-native-animatable';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {
   View,
@@ -14,7 +13,6 @@ import {
 } from 'react-native';
 
 import Intro from './components/intro';
-import Login from './components/login';
 import Dashboard from './components/dashboard';
 import * as actions from './actions/sync';
 

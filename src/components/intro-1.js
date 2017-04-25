@@ -28,12 +28,6 @@ const styles = StyleSheet.create({
   },
   text: {
     color: 'white',
-    backgroundColor: '#00000033',
-    paddingLeft: 20,
-    paddingRight: 20,
-    paddingTop: 20,
-    paddingBottom: 20,
-    borderRadius: 5
   },
   skip: {
     color: 'white',
@@ -54,6 +48,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  centerTextContainer: {
+    backgroundColor: '#00000033',
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 20,
+    paddingBottom: 20,
+    borderRadius: 4,
+  },
   buttonContainer: {
     flex: 1,
     flexDirection: 'column',
@@ -73,9 +75,11 @@ export default class Intro1 extends Component {
           <Heading style={styles.title}>MIS CAUSAS</Heading>
         </View>
         <View style={styles.centerContainer}>
-          <StyledText style={styles.text}>
-            Recibe notificaciones sobre nuevos documentos en tus causas.
-          </StyledText>
+          <View style={styles.centerTextContainer}>
+            <StyledText style={styles.text}>
+              Recibe notificaciones sobre nuevos documentos en tus causas.
+            </StyledText>
+          </View>
         </View>
         <View style={styles.buttonContainer}>
           <Button buttonWidth={buttonWidth} onPress={ this.props.comenzar }>Comenzar</Button>

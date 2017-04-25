@@ -47,6 +47,8 @@ export const triggerLogin = (rut, clave, playerId) => {
             dispatch(loginError(response.data.message));
           }
         }
+      }, err => {
+        console.log(err)
       });
   };
 };

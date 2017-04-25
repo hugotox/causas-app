@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import { persistStore } from 'redux-persist';
 import { AsyncStorage, Text } from 'react-native';
-import Spinner from 'react-native-loading-spinner-overlay';
 import store from './store';
 import Main from './main';
 
