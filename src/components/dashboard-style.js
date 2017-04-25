@@ -14,6 +14,7 @@ export default StyleSheet.create({
     marginTop: Platform.OS === 'ios' ? 20 : 0,
     alignItems: 'flex-start',
     position: 'relative',
+    backgroundColor: 'white',
   },
   heading: {
     alignSelf: "stretch",
@@ -21,7 +22,7 @@ export default StyleSheet.create({
     paddingRight: 20,
     paddingLeft: 20,
     paddingBottom: 5,
-    backgroundColor: '#1a396bdd',
+    backgroundColor: '#1a396b',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
@@ -54,7 +55,9 @@ export default StyleSheet.create({
     color: '#fff'
   },
   menuIcon: {
-
+    position: 'relative',
+    width: 20,
+    height: 20,
   },
   leftMenu: {
     backgroundColor: 'white',
@@ -78,4 +81,23 @@ export default StyleSheet.create({
   emptyDashMessage: {
     padding: 20
   },
+  arrowIcon: {
+    opacity: 0,
+    position: 'absolute',
+    left: 0,
+    top: 0,
+  },
+  barsIcon: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+  },
+  arrowIconVisible: {
+    transform: [{rotate: '180deg'}],
+    opacity: 1,
+  },
+  barsIconVisible: {
+    transform: [{rotate: '180deg'}],
+    opacity: 0
+  }
 });

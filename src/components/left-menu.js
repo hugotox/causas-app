@@ -3,19 +3,12 @@ import {
   View,
   StyleSheet
 } from 'react-native'
-import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures'
 import StyledText from './styled-text.js'
 
 class LeftMenu extends Component {
   render () {
-    const config = {
-      velocityThreshold: 0.1,
-      directionalOffsetThreshold: 90
-    }
     return (
-      <GestureRecognizer
-        onSwipeLeft={ this.props.onRequestHide }
-        config={config}
+      <View
         style={{
           flex: 1,
           backgroundColor: 'white',
@@ -24,8 +17,11 @@ class LeftMenu extends Component {
       >
         <View style={this.props.style}>
           <StyledText>Holi</StyledText>
+          <StyledText>Holi</StyledText>
+          <StyledText>Holi</StyledText>
+          <StyledText>Holi</StyledText>
         </View>
-      </GestureRecognizer>
+      </View>
     )
   }
 }
