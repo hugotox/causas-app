@@ -76,3 +76,9 @@ export const filterNotifications = searchTerm => {
     searchTerm
   }
 }
+
+export function logout() {
+  return {
+    type: ActionTypes.LOGOUT
+  }
+}

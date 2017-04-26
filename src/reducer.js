@@ -87,6 +87,12 @@ export default reducer = (state=initialState, action) => {
       })
     }
 
+    case ActionTypes.LOGOUT: {
+      let updatedState = initialState
+      delete updatedState.playerId
+      return Object.assign({}, state, updatedState)
+    }
+
     default:
       return state;
   }

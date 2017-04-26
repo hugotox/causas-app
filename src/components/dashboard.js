@@ -29,7 +29,7 @@ class Dashboard extends Component {
       page: 1,
       searchVisible: false,
       menuOpen: false,
-      selectedItem: 'dashboard'
+      selectedItem: 'notificaciones'
     }
   }
 
@@ -94,6 +94,9 @@ class Dashboard extends Component {
       isOpen: false,
       selectedItem: item,
     });
+    if(item === 'logout') {
+      this.props.dispatch(actions.logout())
+    }
   }
 
   render () {
@@ -104,7 +107,91 @@ class Dashboard extends Component {
         </View>
       )
     }
-    const menu = <LeftMenu onItemSelected={this.onMenuItemSelected}/>
+
+    let contents
+    switch (this.state.selectedItem) {
+      case 'notificaciones':
+        contents = (
+          <View style={styles.contents}>
+            <View style={styles.heading}>
+              <TouchableOpacity onPress={this.toggleMenu.bind(this)}>
+                <View style={styles.menuIcon}>
+                  <Animatable.View transition={[ 'opacity', 'rotate' ]}
+                                   style={[ styles.barsIcon, this.state.menuOpen ? styles.barsIconVisible : null ]}>
+                    <Icon name="bars" size={20} color="#fff"/>
+                  </Animatable.View>
+                  <Animatable.View transition={[ 'opacity', 'rotate' ]}
+                                   style={[ styles.arrowIcon, this.state.menuOpen ? styles.arrowIconVisible : null ]}>
+                    <Icon name="arrow-right" size={20} color="#fff"/>
+                  </Animatable.View>
+                </View>
+              </TouchableOpacity>
+              <View style={styles.menuTextContainer}>
+                <Animatable.View transition={[ 'opacity' ]}
+                                 style={[ styles.headingTextContainer, { opacity: this.state.searchVisible ? 0 : 1 } ]}>
+                  <StyledText style={styles.headingText}>Últimos documentos recibidos</StyledText>
+                </Animatable.View>
+                <Animatable.View transition={[ 'opacity' ]}
+                                 style={[ styles.searchContainer, { opacity: this.state.searchVisible ? 1 : 0 } ]}>
+                  <TextInput placeholder=''
+                             ref="1"
+                             style={[ styles.searchInput ]}
+                             value={this.props.searchTerm}
+                             blurOnSubmit={false}
+                             onChangeText={this.changeSearchTerm.bind(this)}
+                             underlineColorAndroid="transparent"
+                             placeholderTextColor={Variables.placeholderTextColor}
+                  />
+                </Animatable.View>
+              </View>
+              <View style={styles.searchIconContainer}>
+                <TouchableOpacity style={{ padding: 15 }} ref='search'
+                                  onPress={this.toggleSearch.bind(this)}>
+                  <Icon name={this.state.searchVisible ? 'close' : "search"} size={20} color="#fff"/>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            { this.props.notifications.length === 0 && this.props.searchTerm === '' &&
+            <View>
+              <StyledText style={styles.emptyDashMessage}>
+                Las notificaciones aparecerán en esta sección una vez que nuestro sistema identifique nuevos documentos
+                en
+                tus causas.
+              </StyledText>
+            </View>
+            }
+
+            { this.state.dataSource &&
+            <ListView
+              style={styles.listView}
+              dataSource={this.state.dataSource}
+              renderRow={this.renderNotification.bind(this)}
+              enableEmptySections={true}
+              refreshControl={
+                <RefreshControl
+                  refreshing={this.state.refreshing}
+                  onRefresh={this._onRefresh.bind(this)}
+                />
+              }
+            />
+            }
+          </View>
+        )
+        break
+
+      default:
+        contents = (
+          <View style={styles.contents}>
+            <StyledText>Not implemented</StyledText>
+          </View>
+        )
+    }
+
+    const menu = <LeftMenu
+      onItemSelected={this.onMenuItemSelected}
+      selectedItem={this.state.selectedItem}
+    />
 
     return (
       <SideMenu
@@ -112,69 +199,11 @@ class Dashboard extends Component {
         isOpen={this.state.menuOpen}
         onChange={(menuOpen) => this.updateMenuState(menuOpen)}>
         <View style={styles.container}>
-          <View style={styles.heading}>
-            <TouchableOpacity onPress={this.toggleMenu.bind(this)}>
-              <View style={styles.menuIcon}>
-                <Animatable.View transition={[ 'opacity', 'rotate' ]}
-                                 style={[ styles.barsIcon, this.state.menuOpen ? styles.barsIconVisible : null ]}>
-                  <Icon name="bars" size={20} color="#fff"/>
-                </Animatable.View>
-                <Animatable.View transition={[ 'opacity', 'rotate' ]}
-                                 style={[ styles.arrowIcon, this.state.menuOpen ? styles.arrowIconVisible : null ]}>
-                  <Icon name="arrow-right" size={20} color="#fff"/>
-                </Animatable.View>
-              </View>
-            </TouchableOpacity>
-            <View style={styles.menuTextContainer}>
-              <Animatable.View transition={[ 'opacity' ]}
-                               style={[ styles.headingTextContainer, { opacity: this.state.searchVisible ? 0 : 1 } ]}>
-                <StyledText style={styles.headingText}>Últimos documentos recibidos</StyledText>
-              </Animatable.View>
-              <Animatable.View transition={[ 'opacity' ]}
-                               style={[ styles.searchContainer, { opacity: this.state.searchVisible ? 1 : 0 } ]}>
-                <TextInput placeholder=''
-                           ref="1"
-                           style={[ styles.searchInput ]}
-                           value={this.props.searchTerm}
-                           blurOnSubmit={false}
-                           onChangeText={this.changeSearchTerm.bind(this)}
-                           underlineColorAndroid="transparent"
-                           placeholderTextColor={Variables.placeholderTextColor}
-                />
-              </Animatable.View>
-            </View>
-            <View style={styles.searchIconContainer}>
-              <TouchableOpacity style={{ padding: 15 }} ref='search'
-                                onPress={this.toggleSearch.bind(this)}>
-                <Icon name={this.state.searchVisible ? 'close' : "search"} size={20} color="#fff"/>
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          {this.props.notifications.length === 0 && this.props.searchTerm === '' &&
-          <View>
-            <StyledText style={styles.emptyDashMessage}>
-              Las notificaciones aparecerán en esta sección una vez que nuestro sistema identifique nuevos documentos en
-              tus causas.
-            </StyledText>
-          </View>
-          }
-
-          { this.state.dataSource &&
-          <ListView
-            style={styles.listView}
-            dataSource={this.state.dataSource}
-            renderRow={this.renderNotification.bind(this)}
-            enableEmptySections={true}
-            refreshControl={
-              <RefreshControl
-                refreshing={this.state.refreshing}
-                onRefresh={this._onRefresh.bind(this)}
-              />
-            }
+          <Animatable.View
+            style={[ styles.shader, this.state.menuOpen ? styles.shaderVisible : null ]}
+            transition='opacity'
           />
-          }
-
+          { contents }
         </View>
       </SideMenu>
     );
