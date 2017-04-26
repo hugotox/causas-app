@@ -95,7 +95,7 @@ class Dashboard extends Component {
       selectedItem: item,
     });
     if(item === 'logout') {
-      this.props.dispatch(actions.logout(this.props.rut))
+      this.props.dispatch(actions.logout(this.props.rut, this.props.playerId))
     }
   }
 
@@ -216,7 +216,8 @@ const mapStateToProps = state => {
     clave: state.clave,
     notifications: state.filteredNotifications,
     fetchNotifications: state.fetchNotifications,
-    searchTerm: state.searchTerm
+    searchTerm: state.searchTerm,
+    playerId: state.playerId,
   }
 }
 

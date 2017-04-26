@@ -77,9 +77,9 @@ export const filterNotifications = searchTerm => {
   }
 }
 
-export function logout (rut) {
+export function logout (rut, playerId) {
   return dispatch => {
-    return async.logout(rut)
+    return async.logout(rut, playerId)
       .then(() => {
         dispatch({
           type: ActionTypes.LOGOUT
