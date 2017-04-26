@@ -95,7 +95,7 @@ class Dashboard extends Component {
       selectedItem: item,
     });
     if(item === 'logout') {
-      this.props.dispatch(actions.logout())
+      this.props.dispatch(actions.logout(this.props.rut))
     }
   }
 

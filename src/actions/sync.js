@@ -40,8 +40,8 @@ export const triggerLogin = (rut, clave, playerId) => {
     dispatch(loginStarted());
     return async.loginAsync(rut, clave, playerId)
       .then(response => {
-        if(response.status === 200) {
-          if(response.data.success === true) {
+        if (response.status === 200) {
+          if (response.data.success === true) {
             dispatch(loginSuccess());
           } else {
             dispatch(loginError(response.data.message));
@@ -77,8 +77,14 @@ export const filterNotifications = searchTerm => {
   }
 }
 
-export function logout() {
-  return {
-    type: ActionTypes.LOGOUT
+export function logout (rut) {
+  return dispatch => {
+    return async.logout(rut)
+      .then(() => {
+        dispatch({
+          type: ActionTypes.LOGOUT
+        })
+      })
   }
+
 }

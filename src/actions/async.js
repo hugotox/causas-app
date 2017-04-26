@@ -19,3 +19,7 @@ export const fetchNotifications = (rut, clave, page) => {
     rut, clave, page
   });
 }
+
+export function logout(rut) {
+  return axios.post(`${baseUrl}/logout/`, { rut })
+}
