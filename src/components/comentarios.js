@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 import {
   View,
-  Text,
   TextInput,
-  TouchableOpacity
 } from 'react-native'
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -22,6 +20,12 @@ class Comentarios extends Component {
   sendComments() {
     if(this.state.comments !== '') {
       this.props.sendComments(this.props.rut, this.state.comments)
+        .then(resp => {
+          if(resp.data.success) {
+            alert('Muchas gracias!')
+            this.setState({comments: ''})
+          }
+        })
     }
   }
   render () {

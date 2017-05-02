@@ -100,6 +100,7 @@ export function sendComments(rut, comments) {
         dispatch({
           type: ActionTypes.COMMENTS_SENT
         })
+        return resp
       }, rej => {
         dispatch({
           type: ActionTypes.COMMENTS_SENT
