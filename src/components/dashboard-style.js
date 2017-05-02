@@ -16,18 +16,6 @@ export default StyleSheet.create({
     position: 'relative',
     backgroundColor: 'white',
   },
-  shader: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    backgroundColor: '#333',
-    opacity: 0
-  },
-  shaderVisible: {
-    opacity: 0.5
-  },
   contents: {
     position: 'absolute',
     left: 0,
@@ -60,7 +48,7 @@ export default StyleSheet.create({
   },
   searchContainer: {
     position: 'absolute',
-    top: -25,
+    top: Platform.OS === 'ios' ? -15 : -25,
     left: 0,
     width: width - 70,
     height: 50,

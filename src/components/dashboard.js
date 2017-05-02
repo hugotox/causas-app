@@ -5,11 +5,13 @@ import {
   TextInput,
   ListView,
   RefreshControl,
-  TouchableOpacity,
+  Platform,
 } from 'react-native';
 import SideMenu from 'react-native-side-menu';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Header from './header'
 import * as Animatable from 'react-native-animatable'
+import Comentarios from './comentarios'
+import ActualizarClave from './actualizar-clave.js'
 import LeftMenu from './left-menu.js'
 import * as actions from '../actions/sync.js'
 import StyledText from './styled-text.js'
@@ -19,9 +21,9 @@ import Variables from '../styles/variables'
 
 class Dashboard extends Component {
 
-  constructor () {
+  constructor() {
     super()
-    this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+    this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.initialFetchInterval = ''
     this.state = {
       refreshing: false,
@@ -33,20 +35,20 @@ class Dashboard extends Component {
     }
   }
 
-  fetchData () {
+  fetchData() {
     return this.props.dispatch(
       actions.triggerfetchNotifications(this.props.rut, this.props.clave, this.state.page)
     )
   }
 
-  _onRefresh () {
-    this.setState({ refreshing: true });
+  _onRefresh() {
+    this.setState({refreshing: true});
     this.fetchData().then(() => {
-      this.setState({ refreshing: false });
+      this.setState({refreshing: false});
     });
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.fetchData()
     this.initialFetchInterval = setInterval(() => {
       console.log('fetching...')
@@ -54,52 +56,52 @@ class Dashboard extends Component {
     }, 60 * 60 * 1000)  // fetch every one hour
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (nextProps.notifications) {
-      this.setState({ dataSource: this.ds.cloneWithRows(nextProps.notifications) })
+      this.setState({dataSource: this.ds.cloneWithRows(nextProps.notifications)})
       clearInterval(this.initialFetchInterval)
     }
   }
 
-  renderNotification (notification) {
+  renderNotification(notification) {
     return (
       <Notification notification={notification}/>
     )
   }
 
-  toggleSearch () {
+  toggleSearch() {
     if (!this.state.searchVisible) {
       this.refs[ '1' ].focus()
     } else {
       this.refs[ '1' ].blur()
       this.props.dispatch(actions.filterNotifications(''))
     }
-    this.setState({ searchVisible: !this.state.searchVisible })
+    this.setState({searchVisible: !this.state.searchVisible})
   }
 
-  changeSearchTerm (value) {
+  changeSearchTerm(value) {
     this.props.dispatch(actions.filterNotifications(value))
   }
 
-  toggleMenu () {
-    this.setState({ menuOpen: !this.state.menuOpen })
+  toggleMenu() {
+    this.setState({menuOpen: !this.state.menuOpen})
   }
 
-  updateMenuState (menuOpen) {
-    this.setState({ menuOpen });
+  updateMenuState(menuOpen) {
+    this.setState({menuOpen});
   }
 
   onMenuItemSelected = (item) => {
     this.setState({
-      isOpen: false,
+      menuOpen: false,
       selectedItem: item,
     });
-    if(item === 'logout') {
+    if (item === 'logout') {
       this.props.dispatch(actions.logout(this.props.rut, this.props.playerId))
     }
   }
 
-  render () {
+  render() {
     if (this.props.fetchNotifications) {
       return (
         <View style={styles.container}>
@@ -110,54 +112,45 @@ class Dashboard extends Component {
 
     let contents
     switch (this.state.selectedItem) {
-      case 'notificaciones':
+      case 'notificaciones': {
         contents = (
           <View style={styles.contents}>
-            <View style={styles.heading}>
-              <TouchableOpacity onPress={this.toggleMenu.bind(this)}>
-                <View style={styles.menuIcon}>
-                  <Animatable.View transition={[ 'opacity', 'rotate' ]}
-                                   style={[ styles.barsIcon, this.state.menuOpen ? styles.barsIconVisible : null ]}>
-                    <Icon name="bars" size={20} color="#fff"/>
-                  </Animatable.View>
-                  <Animatable.View transition={[ 'opacity', 'rotate' ]}
-                                   style={[ styles.arrowIcon, this.state.menuOpen ? styles.arrowIconVisible : null ]}>
-                    <Icon name="arrow-right" size={20} color="#fff"/>
-                  </Animatable.View>
-                </View>
-              </TouchableOpacity>
+            <Header
+              showSearch
+              toggleMenu={this.toggleMenu.bind(this)}
+              menuOpen={this.state.menuOpen}
+              toggleSearch={this.toggleSearch.bind(this)}
+              searchVisible={this.state.searchVisible}
+            >
               <View style={styles.menuTextContainer}>
-                <Animatable.View transition={[ 'opacity' ]}
-                                 style={[ styles.headingTextContainer, { opacity: this.state.searchVisible ? 0 : 1 } ]}>
-                  <StyledText style={styles.headingText}>Últimos documentos recibidos</StyledText>
+                <Animatable.View
+                  transition={[ 'opacity' ]}
+                  style={[ styles.headingTextContainer, {opacity: this.state.searchVisible ? 0 : 1} ]}>
+                  <StyledText style={styles.headingText}>Últimas notificaciones</StyledText>
                 </Animatable.View>
-                <Animatable.View transition={[ 'opacity' ]}
-                                 style={[ styles.searchContainer, { opacity: this.state.searchVisible ? 1 : 0 } ]}>
-                  <TextInput placeholder=''
-                             ref="1"
-                             style={[ styles.searchInput ]}
-                             value={this.props.searchTerm}
-                             blurOnSubmit={false}
-                             onChangeText={this.changeSearchTerm.bind(this)}
-                             underlineColorAndroid="transparent"
-                             placeholderTextColor={Variables.placeholderTextColor}
+                <Animatable.View
+                  transition={[ 'opacity' ]}
+                  style={[ styles.searchContainer, {opacity: this.state.searchVisible ? 1 : 0} ]}>
+                  <TextInput
+                    placeholder=''
+                    ref="1"
+                    style={[ styles.searchInput, Platform.OS === 'ios' ? {height: 30} : null ]}
+                    value={this.props.searchTerm}
+                    blurOnSubmit={false}
+                    onChangeText={this.changeSearchTerm.bind(this)}
+                    underlineColorAndroid="transparent"
+                    placeholderTextColor={Variables.placeholderTextColor}
                   />
                 </Animatable.View>
               </View>
-              <View style={styles.searchIconContainer}>
-                <TouchableOpacity style={{ padding: 15 }} ref='search'
-                                  onPress={this.toggleSearch.bind(this)}>
-                  <Icon name={this.state.searchVisible ? 'close' : "search"} size={20} color="#fff"/>
-                </TouchableOpacity>
-              </View>
-            </View>
+
+            </Header>
 
             { this.props.notifications.length === 0 && this.props.searchTerm === '' &&
             <View>
               <StyledText style={styles.emptyDashMessage}>
                 Las notificaciones aparecerán en esta sección una vez que nuestro sistema identifique nuevos documentos
-                en
-                tus causas.
+                en tus causas.
               </StyledText>
             </View>
             }
@@ -179,6 +172,41 @@ class Dashboard extends Component {
           </View>
         )
         break
+      }
+
+      // case 'actualizar': {
+      //   contents = (
+      //     <View style={styles.contents}>
+      //       <Header
+      //         toggleMenu={this.toggleMenu.bind(this)}
+      //         menuOpen={this.state.menuOpen}
+      //         toggleSearch={this.toggleSearch.bind(this)}
+      //         searchVisible={this.state.searchVisible}
+      //       >
+      //         <StyledText style={[styles.headingText, { marginLeft: 15 }]}>Actualizar clave</StyledText>
+      //       </Header>
+      //       <ActualizarClave/>
+      //     </View>
+      //   )
+      //   break
+      // }
+
+      case 'comentarios': {
+        contents = (
+          <View style={styles.contents}>
+            <Header
+              toggleMenu={this.toggleMenu.bind(this)}
+              menuOpen={this.state.menuOpen}
+              toggleSearch={this.toggleSearch.bind(this)}
+              searchVisible={this.state.searchVisible}
+            >
+              <StyledText style={[styles.headingText, { marginLeft: 15 }]}>Enviar comentarios</StyledText>
+            </Header>
+            <Comentarios/>
+          </View>
+        )
+        break
+      }
 
       default:
         contents = (
@@ -199,10 +227,6 @@ class Dashboard extends Component {
         isOpen={this.state.menuOpen}
         onChange={(menuOpen) => this.updateMenuState(menuOpen)}>
         <View style={styles.container}>
-          <Animatable.View
-            style={[ styles.shader, this.state.menuOpen ? styles.shaderVisible : null ]}
-            transition='opacity'
-          />
           { contents }
         </View>
       </SideMenu>

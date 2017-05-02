@@ -60,7 +60,7 @@ class Login extends Component {
             INGRESAR
         </Button>
         {this.props.loginError ?
-          <Text>{this.props.loginError}</Text>
+          <Text style={styles.loginError}>{this.props.loginError}</Text>
         :null}
         <Text style={styles.disclaimer}>
           La clave única es necesaria para permitir el acceso al sitio del poder
@@ -98,6 +98,14 @@ const styles = StyleSheet.create({
     fontFamily: Variables.textFont,
     backgroundColor: '#ffffff00',
     fontSize: Variables.fontSize,
+  },
+  loginError: {
+    fontFamily: Variables.textFont,
+    fontWeight: 'bold',
+    backgroundColor: '#cb928f99',
+    color: 'white',
+    padding: 10,
+    borderRadius: 4,
   },
   input: {
     height: 50,

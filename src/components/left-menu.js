@@ -15,14 +15,19 @@ class LeftMenu extends Component {
       <View style={style.container}>
         <StyledText style={style.heading}>Menu</StyledText>
 
+          <View style={style.separator}/>
+
           <TouchableOpacity style={[style.link, selectedItem === 'notificaciones' ? style.linkSelected : null]}
             onPress={ onItemSelected.bind(this, 'notificaciones') }>
             <View style={style.linkIcon}>
               <Icon name="bell" size={20} color={Variables.textColor}/>
             </View>
-            <StyledText>Ver notificaciones recibidas</StyledText>
+            <StyledText>Ver notificaciones{'\n'}recibidas</StyledText>
           </TouchableOpacity>
 
+          <View style={style.separator}/>
+
+        {/*
           <TouchableOpacity style={[style.link, selectedItem === 'actualizar' ? style.linkSelected : null]}
             onPress={ onItemSelected.bind(this, 'actualizar') }>
             <View style={style.linkIcon}>
@@ -30,6 +35,7 @@ class LeftMenu extends Component {
             </View>
             <StyledText>Actualizar Clave</StyledText>
           </TouchableOpacity>
+        */}
 
           <TouchableOpacity style={[style.link, selectedItem === 'comentarios' ? style.linkSelected : null]}
             onPress={ onItemSelected.bind(this, 'comentarios') }>
@@ -38,6 +44,8 @@ class LeftMenu extends Component {
             </View>
             <StyledText>Enviar comentarios{'\n'}y/o sugerencias</StyledText>
           </TouchableOpacity>
+
+          <View style={style.separator}/>
 
           <TouchableOpacity style={[style.link, selectedItem === 'logout' ? style.linkSelected : null]}
             onPress={ onItemSelected.bind(this, 'logout') }>

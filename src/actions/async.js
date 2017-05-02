@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-// const baseUrl = 'http://192.168.0.6:8000';  // casa
+// const baseUrl = 'http://192.168.0.8:8000';  // casa
 const baseUrl = 'http://ec2-54-214-141-67.us-west-2.compute.amazonaws.com';  // amazon
 
 
@@ -21,4 +21,8 @@ export const fetchNotifications = (rut, clave, page) => {
 
 export function logout(rut, playerId) {
   return axios.post(`${baseUrl}/logout/`, { rut, playerId })
+}
+
+export function sendComments(rut, comments) {
+  return axios.post(`${baseUrl}/api/comments/`, { rut, comments })
 }

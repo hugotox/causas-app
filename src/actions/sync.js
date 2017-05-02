@@ -77,7 +77,7 @@ export const filterNotifications = searchTerm => {
   }
 }
 
-export function logout (rut, playerId) {
+export function logout(rut, playerId) {
   return dispatch => {
     return async.logout(rut, playerId)
       .then(() => {
@@ -87,4 +87,28 @@ export function logout (rut, playerId) {
       })
   }
 
+}
+
+
+export function sendComments(rut, comments) {
+  return dispatch => {
+    dispatch({
+      type: ActionTypes.SENDING_COMMENTS
+    })
+    return async.sendComments(rut, comments)
+      .then(resp => {
+        dispatch({
+          type: ActionTypes.COMMENTS_SENT
+        })
+      }, rej => {
+        dispatch({
+          type: ActionTypes.COMMENTS_SENT
+        })
+      })
+      .catch(() => {
+        dispatch({
+          type: ActionTypes.COMMENTS_SENT
+        })
+      })
+  }
 }

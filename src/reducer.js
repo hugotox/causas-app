@@ -10,7 +10,8 @@ const initialState = {
   fetchNotifications: false,
   notifications: [],
   searchTerm: '',
-  filteredNotifications: []
+  filteredNotifications: [],
+  sendingComments: false
 };
 
 const filterNotifications = (notifications, searchTerm) => {
@@ -91,6 +92,14 @@ export default reducer = (state=initialState, action) => {
       let updatedState = initialState
       delete updatedState.playerId
       return Object.assign({}, state, updatedState)
+    }
+
+    case ActionTypes.SENDING_COMMENTS: {
+      return Object.assign({}, state, { sendingComments: true })
+    }
+
+    case ActionTypes.COMMENTS_SENT: {
+      return Object.assign({}, state, { sendingComments: false })
     }
 
     default:

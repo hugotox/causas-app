@@ -5,5 +5,6 @@ export default Variables = {
   textFont: 'TitilliumWeb-Regular',
   headingFont: 'Bitter-Bold',
   fontSize: 16,
-  headingFontSize: 30
+  headingFontSize: 30,
+  blue: '#1a396bdd'
 }
